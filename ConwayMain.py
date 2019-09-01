@@ -1,3 +1,5 @@
+import time
+
 # Class for positions of conways
 class Position():
     def __init__(self, row, column):
@@ -80,10 +82,10 @@ class Conway_handler():
             # Checks around every live Conway to see if there are any empty cells to be potentially revived
 
             for i in range(row - 1, row + 2):
-                if not i < 0 or i > (len(world) - 1):
+                if not i < 0 or i > (len(self.world) - 1):
 
                     for j in range(column - 1, column + 2): 
-                        if not j < 0 or j > (len(world[0]) - 1):
+                        if not j < 0 or j > (len(self.world[0]) - 1):
 
                             # This works but should be made nicer
                             new_str = str(i) + str(j)
@@ -115,9 +117,6 @@ class Conway_handler():
         
         # Kill conways
         for conway in self.conway_list:    
-            conway.position.print_pos()
-            print("Neighbours nr: {}".format(conway.neighbours))
-            print(conway.alive)
             if(not(conway.alive)):
                 killed_conways.append(conway)
                 self.world[conway.position.row][conway.position.column] = False
@@ -125,16 +124,13 @@ class Conway_handler():
         for killed in killed_conways:
             self.conway_list.remove(killed)
         
-        print("\n")
         # Now add the new Conways
         for new_conway in self.temp_list:
             #print("Conway nr: {}".format(conway.neighbours))
             self.conway_list.append(new_conway)
             self.world[new_conway.position.row][new_conway.position.column] = True
 
-
-
-if __name__ == '__main__':
+def main():
     start_positions = []
     world_width = 10
     world_height = 10
@@ -143,24 +139,26 @@ if __name__ == '__main__':
     world = [[False for x in range(world_width)] for y in range(world_height)]    
 
     # Append start objects to list
-    start_positions.append(Position(0,0))
-    start_positions.append(Position(0,2))
-    start_positions.append(Position(2,0))
+    start_positions.append(Position(2,4))
+    start_positions.append(Position(1,6))
+    start_positions.append(Position(3,4))
     start_positions.append(Position(2,2))
-    start_positions.append(Position(1,1))
-
-   
+    start_positions.append(Position(3,3))
 
     # Create handler with start objects and a specific world
     handler = Conway_handler(start_positions, world)
     
-    for i in range(10):
-        print(handler.world[i]) 
+    while True:
 
-    handler.spawn_new_conways()
-    handler.update_conwoys()
+        for i in range(10):
+            print(handler.world[i]) 
+        print("\n")
 
-    print("\n")
-    for i in range(10):
-        print(handler.world[i])
+        handler.spawn_new_conways()
+        handler.update_conwoys()
+
+        time.sleep(2)
+
+if __name__ == '__main__':
+    main()
 
